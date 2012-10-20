@@ -12,17 +12,14 @@ class MoviesController < ApplicationController
   end
 
   def index
-	    @sort_by = params[:sort_by] ||  session[:sort_by]
+	    @sort_by = params[:sort_by] #||  session[:sort_by]
 	    @all_ratings = Movie.all_ratings
-	    @ratings = params[:ratings] || session[:ratings] || {}
-	    @ratings_ary = @ratings.keys
+	    @ratings = params[:ratings] #|| session[:ratings] || {}
+	    @ratings_ary = @ratings ? @ratings.keys : @all_ratings
             session[:sort_by] = @sort_by
             session[:ratings] = @ratings
 #            redirect_to :sort_by => @sort_by and return #, :ratings => @ratings and return
 	    @movies = Movie.where(:rating => @ratings_ary).order(@sort_by) 
-#           @movies = Movie.order(@sort_by) 
-#	    session[:sort_by] = @sort_by
-#	    session[:ratings] = @ratings
 #	    redirect_to movies_path(:sort_by => @sort_by)
 #	    redirect_to :sort_by => @sort_by and return
   end
