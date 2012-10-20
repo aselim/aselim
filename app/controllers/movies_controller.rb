@@ -17,22 +17,24 @@ class MoviesController < ApplicationController
 	    @ratings = params[:ratings]  || session[:ratings]
             @all_ratings = Movie.all_ratings
             @ratings_ary = @ratings ? @ratings.keys : @all_ratings
-            session[:sort_by] = @sort_by
+	    if (not params[:ratings] and not params[:sort_by] and not params[:commit]) and (session[:ratings] or session[:sort_by])
+	    redirect_to movies_path(:ratings => session[:ratings], :sort_by => session[:sort_by])
+	    end
+            @movies = Movie.where(:rating => @ratings_ary).order(@sort_by)
+	    session[:sort_by] = @sort_by
             session[:ratings] = @ratings
-            redirect_to :sort_by => @sort_by, :rating => @ratings_ary and return
-#           redirect_to movies_path and return
-	    @movies = Movie.where(:rating => @ratings_ary).order(@sort_by) 
+#	    @movies = Movie.where(:rating => @ratings_ary).order(@sort_by) 
 #	    redirect_to movies_path(:sort_by => @sort_by)
   end
 
   def new
-    # default: render 'new' template
+	# default: render 'new' template
   end
 
   def create
     @movie = Movie.create!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully created."
-    redirect_to movies_path
+    redirect_to movies_path(:sort_by => @sort_by, :rating => @ratings_ary)  and return
   end
 
   def edit
@@ -50,7 +52,8 @@ class MoviesController < ApplicationController
     @movie = Movie.find(params[:id])
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
-    redirect_to movies_path
+#    redirect_to movies_path
+    redirect_to movies_path(:sort_by => @sort_by, :rating => @ratings_ary) and return
   end
 
 end
