@@ -23,7 +23,7 @@ class MoviesController < ApplicationController
 #           @movies = Movie.order(@sort_by) 
 #	    session[:sort_by] = @sort_by
 #	    session[:ratings] = @ratings
-#	    redirect_to movies_path(session[:sort_by])
+#	    redirect_to movies_path(:sort_by => @sort_by)
 #	    redirect_to :sort_by => @sort_by and return
   end
 
